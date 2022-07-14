@@ -1,0 +1,16 @@
+{
+  "PORT": 8080,
+  "TALK_API_URL": "https://api.a3rt.recruit.co.jp/talk/v1/smalltalk",
+  "TALK_API_KEY": "DZZxwzUDGaJiwSEiIqJW1rtEAX8aTWJH",
+  "WEATHER_URL": "https://www.jma.go.jp/bosai/forecast/data/forecast/",
+  "WEATHER_DEFAULT_AREA": {
+    "name": "東京都",
+    "code": 130000
+  },
+  "NEWS_API_URL": "https://newsapi.org/v2/top-headlines",
+  "NEWS_API_KEY": "bf87c2ee3efa4c6694a2dcf0d31980ec",
+  "NEWS_API_COUNTRY": "jp",
+  "COVID19_PCR_POSITIVE_DAILY_URL": "https://covid19.mhlw.go.jp//public/opendata/newly_confirmed_cases_daily.csv",
+  "GOOGLE_SENTIMENT_API_URL": "https://language.googleapis.com/v1/documents:analyzeSentiment",
+  "GOOGLE_SENTIMENT_API_KEY": "AIzaSyDYtm1XqT6_NZVp-3mbz2rIh8lvI2VJrfs"
+}

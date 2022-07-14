@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/chat.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+          integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+          integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+          crossorigin="anonymous"></script>
+  <title>チャット</title>
+  <script>
+    $(document).ready(function () {
+      addBotTalk();
+      setReplyToBotMessage({text: '入力してください'});
+
+      $('#send_btn').on('click', onClick);
+    });
+
+    function addBotTalk() {
+      const $item = $('#templates .bot-template').clone();
+      $('#talks').append($item);
+    }
+
+    function setReplyToBotMessage(reply) {
+      const text = reply.text;
+      const $template = $('#talks').find('.bot-template:last');
+      const $operator = $template.find('.operator');
+      const $message = $template.find('.message');
+      $message.text(text);
+      setOperatorFeeling($operator, reply.score);
+      if (reply.linkUrl) {
+        const $item = $('#templates .link-template').clone();
+        const $link = $('.link', $item);
+        $link.attr('href', reply.linkUrl);
+        $link.find('.link-text').text(reply.linkUrl);
+        if (reply.imageUrl) {
+          $link.append(`<img src="${reply.imageUrl}" onload="scrollBottom()">`);
+        }
+        $message.append($item);
+      }
+    }
+
+    function setOperatorFeeling($operator, score) {
+      // ポジティブ
+      if (score > 0.25) {
+        $operator.addClass('is-laughing');
+        $operator.addClass('bg-success');
+        $operator.removeClass('bg-secondary');
+      }
+      // ネガティブ
+      if (score < -0.25) {
+        $operator.addClass('is-crying');
+        $operator.addClass('bg-info');
+        $operator.removeClass('bg-secondary');
+      }
+    }
+
+    function onClick() {
+      const $inputText = $('input[name="user_talk"]');
+      const text = $inputText.val();
+      if (!text) {
+        return
+      }
+      $inputText.val(null);
+      addUserTalk(text);
+      callBackend(text);
+    }
+
+    function addUserTalk(message) {
+      const $item = $('#templates .user-template').clone();
+      $('.message', $item).text(message);
+      $('#talks').append($item);
+    }
+
+    function callBackend(text) {
+      addBotTalk();
+      scrollBottom();
+      fetch('http://localhost:8080/chat?text=' + text)
+        .then(response => response.json())
+        .then(reply => {
+          setReplyToBotMessage(reply);
+          scrollBottom();
+        });
+    }
+    function scrollBottom() {
+      window.scroll(0, $(window).height());
+    }
+  </script>
+</head>
+<body>
+<h5>チャット</h5>
+
+<div id="container">
+  <div id="talks"></div>
+
+  <div id="send" class="m-2">
+    <div class="input-group">
+      <input type="text" name="user_talk" class="form-control" placeholder="入力してください"
+             aria-label="Recipient's username" aria-describedby="button-addon2">
+      <button id="send_btn" class="btn btn-primary" type="button">送信</button>
+    </div>
+  </div>
+</div>
+<div id="templates">
+  <div class="bot-template d-flex flex-row ml-2 mr-2">
+    <div class="operator rounded-circle bg-secondary mr-2"></div>
+    <div class="alert alert-success message" role="alert">
+      <div class="spinner-grow spinner-grow-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow spinner-grow-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow spinner-grow-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="link-template">
+    <a class="link" href="" target="_blank">
+      <div class="link-text mb-2"></div>
+    </a>
+  </div>
+
+  <div class="user-template d-flex flex-row-reverse ml-2 mr-2">
+    <div class="alert alert-secondary message" role="alert"></div>
+  </div>
+</div>
+</body>
+</html>
