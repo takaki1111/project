@@ -10,7 +10,7 @@ const config = require('./server-config.json');
 const NEWS_SAVE_FILE = __dirname + '/data/news.txt';
 const AREA_JSON_FILE = __dirname + '/data/area.json';
 const areas = JSON.parse(fs.readFileSync(AREA_JSON_FILE, 'utf-8'));
-const PORT =process.env.PORT || 8080;
+const PORT =process.env.PORT ;
 
 const app = express();
 app.use(express.static(__dirname + '/public'));
