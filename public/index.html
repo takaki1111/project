@@ -80,7 +80,7 @@
     function callBackend(text) {
       addBotTalk();
       scrollBottom();
-      fetch('http://ktakahashi-web-server.herokuapp.com/chat?text=' + text)
+      fetch('https://ktakahashi-web-server.herokuapp.com/chat?text=' + text)
         .then(response => response.json())
         .then(reply => {
           setReplyToBotMessage(reply);
