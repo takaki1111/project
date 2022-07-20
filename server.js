@@ -11,8 +11,10 @@ const NEWS_SAVE_FILE = __dirname + '/data/news.txt';
 const AREA_JSON_FILE = __dirname + '/data/area.json';
 const areas = JSON.parse(fs.readFileSync(AREA_JSON_FILE, 'utf-8'));
 const PORT =process.env.PORT ;
-
+const cors = require('cors');
 const app = express();
+
+app.use(cors())
 app.use(express.static(__dirname + '/public'));
 app.listen(PORT, () => {
   console.log(`Server started on port:${config.PORT}`);
